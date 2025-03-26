@@ -33,7 +33,7 @@ exports.getJobs = async (req, res) => {
 };
 
 exports.updateJob = async (req, res) => {
-  const { id } = req.params; // Assuming you're using URL parameters for job ID
+  const { id } = req.params;
   const { title, description, company, location } = req.body;
 
   // Validate input data

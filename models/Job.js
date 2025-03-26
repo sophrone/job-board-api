@@ -1,35 +1,33 @@
-const { Schema } = require("drizzle-orm");
-
-const Job = new Schema({
+const Job = {
   id: {
     type: "serial",
-    primaryKey: true,
+    primaryKey: true, // Auto-incrementing primary key
   },
   title: {
     type: "string",
-    required: true,
+    notNull: true, // Title is required
   },
   description: {
     type: "text",
-    required: true,
+    notNull: true, // Description is required
   },
   company: {
     type: "string",
-    required: true,
+    notNull: true, // Company name is required
   },
   location: {
     type: "string",
-    required: true,
+    notNull: true, // Location is required
   },
   createdAt: {
     type: "timestamp",
-    default: () => new Date(), // Automatically set to current date
+    default: () => new Date(), // Default to current timestamp
   },
   updatedAt: {
     type: "timestamp",
-    default: () => new Date(), // Automatically set to current date
-    onUpdate: () => new Date(), // Update timestamp on record update
+    default: () => new Date(), // Default to current timestamp
+    onUpdate: () => new Date(), // Update timestamp on row update
   },
-});
+};
 
 module.exports = Job;

@@ -3,11 +3,11 @@ const { drizzle } = require("drizzle-orm/postgres-js");
 const postgres = require("postgres");
 
 const sql = postgres({
-  host: "localhost", // or your host
-  port: 5432, // default PostgreSQL port
+  host: "localhost",
+  port: 5432,
   user: "samueldaniel",
   password: "", // Replace with your actual password
-  database: "samueldaniel", // Database name
+  database: "samueldaniel",
 });
 
 // Initialize drizzle with the postgres client

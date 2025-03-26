@@ -18,6 +18,15 @@ const validateLogin = [
   body("password").notEmpty().withMessage("Password is required"),
 ];
 
+// Error handling middleware
+const handleValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
+
 // Route for user registration
 router.post(
   "/register",

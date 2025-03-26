@@ -20,7 +20,7 @@ exports.verifyToken = (req, res, next) => {
       return res.status(500).json({ error: "Failed to authenticate token" });
     }
 
-    req.userId = decoded.id; // Store user ID from token in request object
-    next(); // Proceed to the next middleware or route handler
+    req.userId = decoded.id;
+    next();
   });
 };

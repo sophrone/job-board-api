@@ -1,33 +1,31 @@
-const { Schema } = require("drizzle-orm");
-
-const User = new Schema({
+const User = {
   id: {
     type: "serial",
-    primaryKey: true,
+    primaryKey: true, // Auto-incrementing primary key
   },
   username: {
     type: "string",
-    required: true,
+    notNull: true,
     unique: true, // Ensure unique usernames
   },
   email: {
     type: "string",
-    required: true,
+    notNull: true,
     unique: true, // Ensure unique emails
   },
   password: {
     type: "string",
-    required: true,
+    notNull: true,
   },
   createdAt: {
     type: "timestamp",
-    default: () => new Date(),
+    default: () => new Date(), // Default to current timestamp
   },
   updatedAt: {
     type: "timestamp",
     default: () => new Date(),
-    onUpdate: () => new Date(),
+    onUpdate: () => new Date(), // Update timestamp on row update
   },
-});
+};
 
 module.exports = User;

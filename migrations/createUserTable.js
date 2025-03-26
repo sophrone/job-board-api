@@ -1,4 +1,4 @@
-const db = require("../db"); // Ensure this path is correct
+const db = require("../db");
 
 async function createUserTable() {
   await db.$client`CREATE TABLE IF NOT EXISTS users (

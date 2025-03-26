@@ -1,60 +1,66 @@
 const db = require("../db");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
 
-exports.register = async (req, res) => {
+// Function to register a new user
+const register = async (req, res) => {
+  const { username, email, password } = req.body;
   try {
-    const { username, password, email } = req.body;
-
-    // Validate input data
-    if (!username || !password || !email) {
-      return res.status(400).json({ error: "All fields are required" });
-    }
-
     // Check if the user already exists
     const existingUser = await db
       .select()
-      .from(User)
-      .where({ username })
-      .first();
-    if (existingUser) {
-      return res.status(409).json({ error: "Username already exists" });
+      .from("users")
+      .where("username", username)
+      .execute();
+
+    console.log("Existing User Check:", existingUser); // Log the existing user check
+
+    if (existingUser.length > 0) {
+      return res.status(400).json({ error: "User already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await db
-      .insert(User)
-      .values({ username, password: hashedPassword, email })
-      .returning("*");
+    // Insert new user using raw SQL for testing
+    const query = `
+      INSERT INTO users (username, email, password)
+      VALUES ($1, $2, $3)
+      RETURNING *;`;
 
-    res.status(201).json(newUser);
+    const params = [username, email, password];
+
+    // Execute the query directly
+    const newUser = await db.execute(query, params);
+
+    console.log("New User Created:", newUser); // Log the newly created user
+    res.status(201).json(newUser.rows[0]); // Send the created user back
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ error: "Failed to register user" });
   }
 };
 
-exports.login = async (req, res) => {
+// Function to log in a user
+const login = async (req, res) => {
+  const { username, password } = req.body;
   try {
-    const { username, password } = req.body;
+    // Retrieve user by username
+    const user = await db
+      .select()
+      .from("users")
+      .where("username", username)
+      .execute();
 
-    // Validate input data
-    if (!username || !password) {
-      return res.status(400).json({ error: "All fields are required" });
-    }
+    console.log("User Retrieved:", user); // Log the retrieved user
 
-    const user = await db.select().from(User).where({ username }).first();
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (user.length === 0 || user[0].password !== password) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    // Generate a token
+    const token = "your_generated_token"; // Replace with actual token generation logic
+    console.log("User Logged In:", user[0]); // Log the logged-in user
     res.status(200).json({ token });
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ error: "Failed to login" });
   }
 };
+
+module.exports = { register, login };
