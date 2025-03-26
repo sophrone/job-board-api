@@ -8,20 +8,25 @@ const User = new Schema({
   username: {
     type: "string",
     required: true,
-    unique: true,
+    unique: true, // Ensure unique usernames
+  },
+  email: {
+    type: "string",
+    required: true,
+    unique: true, // Ensure unique emails
   },
   password: {
     type: "string",
     required: true,
   },
-  email: {
-    type: "string",
-    required: true,
-    unique: true,
-  },
   createdAt: {
     type: "timestamp",
     default: () => new Date(),
+  },
+  updatedAt: {
+    type: "timestamp",
+    default: () => new Date(),
+    onUpdate: () => new Date(),
   },
 });
 

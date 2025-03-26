@@ -23,7 +23,12 @@ const Job = new Schema({
   },
   createdAt: {
     type: "timestamp",
-    default: () => new Date(),
+    default: () => new Date(), // Automatically set to current date
+  },
+  updatedAt: {
+    type: "timestamp",
+    default: () => new Date(), // Automatically set to current date
+    onUpdate: () => new Date(), // Update timestamp on record update
   },
 });
 
