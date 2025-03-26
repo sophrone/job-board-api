@@ -1,19 +1,20 @@
-const db = require("../db");
-const User = require("../models/User");
+const db = require("../db"); // Ensure this path is correct
 
-async function createUsersTable() {
-  try {
-    await db.schema.createTable(User.name, (table) => {
-      table.increments("id").primary();
-      table.string("username").notNullable().unique();
-      table.string("email").notNullable().unique();
-      table.string("password").notNullable();
-      table.timestamp("createdAt").defaultTo(db.fn.now());
-    });
-    console.log("Users table created successfully");
-  } catch (error) {
-    console.error("Error creating users table:", error);
-  }
+async function createUserTable() {
+  await db.$client`CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`;
 }
 
-createUsersTable();
+createUserTable()
+  .then(() => {
+    console.log("User table created successfully.");
+  })
+  .catch((error) => {
+    console.error("Migration failed:", error);
+  });

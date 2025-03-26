@@ -1,20 +1,19 @@
-const db = require("../db");
-const Job = require("../models/Job");
+const db = require("../db"); // Ensure this path is correct
 
-async function createJobsTable() {
-  try {
-    await db.schema.createTable(Job.name, (table) => {
-      table.increments("id").primary();
-      table.string("title").notNullable();
-      table.text("description").notNullable();
-      table.string("company").notNullable();
-      table.string("location").notNullable();
-      table.timestamp("createdAt").defaultTo(db.fn.now());
-    });
-    console.log("Jobs table created successfully");
-  } catch (error) {
-    console.error("Error creating jobs table:", error);
-  }
+async function createJobTable() {
+  await db.$client`CREATE TABLE IF NOT EXISTS jobs (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`;
 }
 
-createJobsTable();
+createJobTable()
+  .then(() => {
+    console.log("Job table created successfully.");
+  })
+  .catch((error) => {
+    console.error("Migration failed:", error);
+  });

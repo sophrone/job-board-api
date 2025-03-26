@@ -1,15 +1,16 @@
-const { drizzle } = require("drizzle-orm"); // Adjust import if needed
-const { Pool } = require("pg");
+require("dotenv").config();
+const { drizzle } = require("drizzle-orm/postgres-js");
+const postgres = require("postgres");
 
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+const sql = postgres({
+  host: "localhost", // or your host
+  port: 5432, // default PostgreSQL port
+  user: "samueldaniel",
+  password: "", // Replace with your actual password
+  database: "samueldaniel", // Database name
 });
 
-// Initialize drizzle with the pool
-const db = drizzle(pool);
+// Initialize drizzle with the postgres client
+const db = drizzle(sql);
 
 module.exports = db;
